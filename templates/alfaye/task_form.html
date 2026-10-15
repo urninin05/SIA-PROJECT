@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% if task %}Edit Task{% else %}Add Task{% endif %}</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 500px;
+            margin: 50px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background-color: #198754;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #146c43;
+        }
+
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            text-decoration: none;
+            color: #0d6efd;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>
+        {% if task %}
+            Edit Task
+        {% else %}
+            Add New Task
+        {% endif %}
+    </h1>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <label>Task Title</label>
+        <input
+            type="text"
+            name="task_title"
+            value="{{ task.task_title|default:'' }}"
+            placeholder="Enter task title"
+            required
+        >
+
+        <label>Description</label>
+        <textarea
+            name="description"
+            placeholder="Enter task description"
+            required
+        >{{ task.description|default:'' }}</textarea>
+
+        <label>Subject</label>
+        <input
+            type="text"
+            name="subject"
+            value="{{ task.subject|default:'' }}"
+            placeholder="Enter subject"
+            required
+        >
+
+        <label>Deadline</label>
+        <input
+            type="date"
+            name="deadline"
+            value="{{ task.deadline|date:'Y-m-d' }}"
+            required
+        >
+
+        <label>Status</label>
+
+        <select name="status">
+
+            <option value="Pending"
+                {% if task.status == 'Pending' %}selected{% endif %}>
+                Pending
+            </option>
+
+            <option value="In Progress"
+                {% if task.status == 'In Progress' %}selected{% endif %}>
+                In Progress
+            </option>
+
+            <option value="Completed"
+                {% if task.status == 'Completed' %}selected{% endif %}>
+                Completed
+            </option>
+
+        </select>
+
+        <button type="submit">
+            {% if task %}
+                Update Task
+            {% else %}
+                Add Task
+            {% endif %}
+        </button>
+
+    </form>
+
+    <a href="{% url 'task_list' %}" class="back">
+        ← Back to Task List
+    </a>
+
+</div>
+
+</body>
+</html>
